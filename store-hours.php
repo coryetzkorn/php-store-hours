@@ -1,7 +1,7 @@
 <?php 
 
 // -------- PHP STORE HOURS ---------
-// ---------- Version 1.3 -----------
+// ---------- Version 1.4 -----------
 // -------- BY CORY ETZKORN ---------
 // -------- coryetzkorn.com ---------
 
@@ -37,7 +37,6 @@ $closed_output = '<img src="images/closed_sign.png" alt="Sorry, we\'re closed!" 
 $echo_daily_hours = true; // Switch to FALSE to hide numerical display of current hours
 $time_output = 'g:ia'; // Enter custom time output format (options listed here: http://php.net/manual/en/function.date.php)
 $time_separator = ' - '; // Choose how to indicate range (i.e XX - XX, XX to XX, XX until XX)
-$closed_text_output = "Closed"; // This will show if $echo_daily_hours is set to true and the current day's time range is set to 00:00-00:00
 
 // -------- END EDITING -------- 
 
@@ -45,6 +44,7 @@ $closed_text_output = "Closed"; // This will show if $echo_daily_hours is set to
 $status_today = strtolower(date("D"));
 // Gets current time of day in 00:00 format
 $current_time = date("G:i");
+
 // Makes current time of day computer-readable
 $current_time_x = strtotime($current_time);
 
@@ -59,37 +59,32 @@ foreach ($all_days as &$each_day) {
 	}
 }
 
-// Defines array of possible days of week
-$week_days = array("mon", "tue", "wed", "thu", "fri", "sat", "sun");
+// Open / closed logic
+echo '<div class="open-closed-sign">';
+$output_status = false;
 
-// Compares current day of week to possible days of week and determines open vs closed output based on current day and time.
-foreach ($week_days as &$each_week_day) {
-		if ($status_today == $each_week_day) {
-		echo '<div class="open-closed-sign">';
-		$output_status = false;
-		foreach($all_days[$each_week_day] as $each_interval) {
-			if (($each_interval[0] <= $current_time_x) && ($each_interval[1] >= $current_time_x) && !$output_status) {
-				echo $open_output;
-				$output_status = true;
-			}
-		}
-		if (!$output_status) {
-			echo $closed_output;
-		}
-		if ($echo_daily_hours) {
-			echo '<br /><span class="time_output">';
-			if ((date("g", $all_days[$each_week_day][0][0]) == "12") && (date("g", $all_days[$each_week_day][0][1]) == "12")) {
-				echo $closed_text_output;
-			} else {
-				$interval_count = 0;
-				foreach($all_days[$each_week_day] as $each_interval) {
-					echo date($time_output, $each_interval[0]) . $time_separator . date($time_output, $each_interval[1]);
-					echo '<br />';
-				}
-			}
-			echo '</span>';
-		}
-		echo '</div>';
-	} 
+foreach($all_days[$status_today] as $each_interval) {
+	if (($each_interval[0] <= $current_time_x) && ($each_interval[1] >= $current_time_x)) {
+		// If any interval matches the current time, output should be set to true. Future intervals should not override this setting.
+		$output_status = true;
+		break;
+	}
 }
+
+if ($output_status) {
+	echo $open_output;
+} else {
+	echo $closed_output;
+}
+
+if ($echo_daily_hours) {
+	echo '<br /><span class="time_output">';
+	foreach($all_days[$status_today] as $each_interval) {
+		echo date($time_output, $each_interval[0]) . $time_separator . date($time_output, $each_interval[1]);
+		echo '<br />';
+	}
+	echo '</span>';
+}
+echo '</div>';
+
 ?>
