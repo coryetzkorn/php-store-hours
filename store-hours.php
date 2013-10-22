@@ -1,7 +1,7 @@
 <?php 
 
 // -------- PHP STORE HOURS ---------
-// ---------- Version 1.4 -----------
+// ---------- Version 2.0 -----------
 // -------- BY CORY ETZKORN ---------
 // -------- coryetzkorn.com ---------
 
@@ -10,18 +10,16 @@
 
 // Set your timezone (codes listed at http://php.net/manual/en/timezones.php)
 // Delete the following line if you've already defined a timezone elsewhere.
-date_default_timezone_set('America/Chicago'); 
+date_default_timezone_set('America/New_York'); 
 
 // Define daily open hours
 // Must be in 24-hour format, separated by dash 
 // If closed for the day, set to 00:00-00:00
-// Midnight is represented by 00:00
 // If open multiple times in one day, enter time ranges separated by a comma
 // If open late (ie. 6pm - 1am), add hours after midnight to the next day (ie. 00:00-1:00)
-
-$time_range = array(
+$hours = array(
     'mon' => array('11:00-20:30'),
-    'tue' => array('7:00-11:00', '13:00-20:30'),
+    'tue' => array('11:00-16:00', '18:00-20:30'),
     'wed' => array('11:00-20:30'),
     'thu' => array('11:00-20:30'),
     'fri' => array('11:00-20:30'),
@@ -29,62 +27,78 @@ $time_range = array(
     'sun' => array('11:00-20:30')
 );
 
-// Place HTML for output here. Image paths or plain text (H1, H2, p) are all acceptable.
-$open_output = '<img src="images/open_sign.png" alt="Come in, we\'re open!" />';
-$closed_output = '<img src="images/closed_sign.png" alt="Sorry, we\'re closed!" />';
+// Optional: add exceptions (great for holidays etc.)
+// Works best with format day/month
+// Leave array empty if no exceptions
+$exceptions = array(
+	//'Christmas' => '10/22',
+	//'New Years Day' => '1/1'
+);
 
-// OPTIONAL: Output current day's open hours 
-$echo_daily_hours = true; // Switch to FALSE to hide numerical display of current hours
-$time_output = 'g:ia'; // Enter custom time output format (options listed here: http://php.net/manual/en/function.date.php)
-$time_separator = ' - '; // Choose how to indicate range (i.e XX - XX, XX to XX, XX until XX)
+// Place HTML for output below. This is what will show in the browser.
+// Optional: use %open% and %closed% to add dynamic times to your open message.
+// Warning: %open% and %closed% will NOT work if you have multiple time ranges assigned to a single day.
+// Optional: use %day% to make your "closed all day" message more dynamic.
+// Optional: use %exception% to make your exception messages dynamic.
+$open_now = "<h3>Yes, we're open! Today's hours are %open% until %closed%.</h3>";
+$closed_now = "<h3>Sorry, we're closed. Today's hours are %open% until %closed%.";
+$closed_all_day = "<h3>Sorry, we're closed on %day%.</h3>";
+$exception = "<h3>Sorry, we're closed for %exception%.</h3>";
+
+// Enter custom time format if using %open% and %closed%
+// (options listed here: http://php.net/manual/en/function.date.php)
+$time_format = 'g:ia';
+
 
 // -------- END EDITING -------- 
 
-// Gets current day of week
-$status_today = strtolower(date("D"));
-// Gets current time of day in 00:00 format
-$current_time = date("G:i");
+$day = strtolower(date("D"));
+$today = strtotime('today midnight');
+$now = strtotime(date("G:i"));
+$is_open = 0;
+$is_exception = false;
+$is_closed_all_day = false;
 
-// Makes current time of day computer-readable
-$current_time_x = strtotime($current_time);
+// Check if closed all day
+if($hours[$day][0] == '00:00-00:00') {
+	$is_closed_all_day = true;
+}
 
-// Builds an array, assigning user-defined time ranges to each day of week
-$all_days = array("mon" => $time_range['mon'], "tue" => $time_range['tue'], "wed" => $time_range['wed'], "thu" => $time_range['thu'], "fri" => $time_range['fri'], "sat" => $time_range['sat'], "sun" => $time_range['sun']);
-foreach ($all_days as &$each_day) {
-	foreach ($each_day as &$each_interval) {
-		// count($each_day)
-		$each_interval = explode("-", $each_interval);
-		$each_interval[0] = strtotime($each_interval[0]);
-		$each_interval[1] = strtotime($each_interval[1]);
+// Check if currently open
+foreach($hours[$day] as $range) {
+	$range = explode("-", $range);
+	$start = strtotime($range[0]);
+	$end = strtotime($range[1]);
+	if (($start <= $now) && ($end >= $now)) {
+		$is_open ++;
 	}
 }
 
-// Open / closed logic
-echo '<div class="open-closed-sign">';
-$output_status = false;
-
-foreach($all_days[$status_today] as $each_interval) {
-	if (($each_interval[0] <= $current_time_x) && ($each_interval[1] >= $current_time_x)) {
-		// If any interval matches the current time, output should be set to true. Future intervals should not override this setting.
-		$output_status = true;
-		break;
+// Check if today is an exception
+foreach($exceptions as $ex => $ex_day) {
+	$ex_day = strtotime($ex_day);
+	if($ex_day === $today) {
+		$is_open = 0;
+		$is_exception = true;
+		$the_exception = $ex;
 	}
 }
 
-if ($output_status) {
-	echo $open_output;
+// Output HTML
+if($is_exception) {
+	$exception = str_replace('%exception%', $the_exception, $exception);
+	echo $exception;
+} elseif($is_closed_all_day) {
+	$closed_all_day = str_replace('%day%', date('l', $today) . 's', $closed_all_day);
+	echo $closed_all_day;
+} elseif($is_open > 0) {
+	$open_now = str_replace('%open%', date($time_format, $start), $open_now);
+	$open_now = str_replace('%closed%', date($time_format, $end), $open_now);
+	echo $open_now;
 } else {
-	echo $closed_output;
+	$closed_now = str_replace('%open%', date($time_format, $start), $closed_now);
+	$closed_now = str_replace('%closed%', date($time_format, $end), $closed_now);
+	echo $closed_now;
 }
-
-if ($echo_daily_hours) {
-	echo '<br /><span class="time_output">';
-	foreach($all_days[$status_today] as $each_interval) {
-		echo date($time_output, $each_interval[0]) . $time_separator . date($time_output, $each_interval[1]);
-		echo '<br />';
-	}
-	echo '</span>';
-}
-echo '</div>';
 
 ?>

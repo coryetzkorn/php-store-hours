@@ -5,11 +5,15 @@
 <head>
 <title>PHP Store Hours</title>
 <style type="text/css">
-body {font-family: arial; text-align: center;}
+body {
+	font-family: 'Helvetica Neue', arial;
+	text-align: center;
+}
 </style>
 </head>
 
 	<body>
+	
 	<h1>Gadgets Inc.</h1>
 	<h2>Store Hours</h2>
 	
