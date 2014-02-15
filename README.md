@@ -1,4 +1,4 @@
-php_store_hours
+PHP Store Hours
 ===============
 
 PHP Store Hours
