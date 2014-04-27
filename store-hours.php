@@ -23,7 +23,7 @@ $hours = array(
     'wed' => array('11:00-20:30'),
     'thu' => array('11:00-20:30'),
     'fri' => array('11:00-20:30'),
-    'sat' => array('11:00-20:30'),
+    'sat' => array('11:00-20:00'),
     'sun' => array('11:00-20:30')
 );
 
@@ -48,6 +48,18 @@ $exception = "<h3>Sorry, we're closed for %exception%.</h3>";
 // Enter custom time format if using %open% and %closed%
 // (options listed here: http://php.net/manual/en/function.date.php)
 $time_format = 'g:ia';
+
+// The %day% shortcode is replaced by these days of the week.
+// Edit these if you'd like to use a language other than English.
+$days = array(
+  'mon' => 'Mondays',
+  'tue' => 'Tuesdays',
+  'wed' => 'Wednesdays',
+  'thu' => 'Thursdays',
+  'fri' => 'Fridays',
+  'sat' => 'Saturdays',
+  'sun' => 'Sundays'
+);
 
 
 // -------- END EDITING -------- 
@@ -89,7 +101,7 @@ if($is_exception) {
 	$exception = str_replace('%exception%', $the_exception, $exception);
 	echo $exception;
 } elseif($is_closed_all_day) {
-	$closed_all_day = str_replace('%day%', date('l', $today) . 's', $closed_all_day);
+	$closed_all_day = str_replace('%day%', $days[$day], $closed_all_day);
 	echo $closed_all_day;
 } elseif($is_open > 0) {
 	$open_now = str_replace('%open%', date($time_format, $start), $open_now);
