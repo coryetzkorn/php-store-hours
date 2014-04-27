@@ -34,7 +34,7 @@ $closed_all_day = "<h3>Sorry, we're closed on %day%.</h3>";
 $exception = "<h3>Sorry, we're closed for %exception%.</h3>";
 ```
 
-There's no need to copy/paste the code above... it's all included in the download. Please report any bugs or issues here on GitHub. I'd love to hear your ideas for improving this scipt or see how you've used it in your latest project.
+There's no need to copy/paste the code above... it's all included in the download. Please report any bugs or issues here on GitHub. I'd love to hear your ideas for improving this script or see how you've used it in your latest project.
 
 
 ##Sites using PHP Store Hours
