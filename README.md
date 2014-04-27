@@ -1,7 +1,7 @@
 PHP Store Hours
 ===============
 
-PHP Store Hours is a lightweight PHP script that outputs content based on time-of-day and-day-of-week. Simply include the script in any PHP page, adjust opening and closing hours for each day of the week and the script will output content based on the time ranges you specify.
+PHP Store Hours is a simple script that outputs content based on time-of-day and-day-of-week. Simply include the script in any PHP page, adjust opening and closing hours for each day of the week and the script will output content based on the time ranges you specify.
 
 ###Easily set open hours for each day of the week
 ```php
@@ -34,7 +34,7 @@ $closed_all_day = "<h3>Sorry, we're closed on %day%.</h3>";
 $exception = "<h3>Sorry, we're closed for %exception%.</h3>";
 ```
 
-PHP Store Hours is just one simple file. There's no need to copy/paste the code above... it's all included in the download. Please report any bugs or issues on GitHub. I'd love to hear your ideas for improving this plugin or see how you've used it in your latest project.
+There's no need to copy/paste the code above... it's all included in the download. Please report any bugs or issues here on GitHub. I'd love to hear your ideas for improving this scipt or see how you've used it in your latest project.
 
 
 ##Sites using PHP Store Hours
@@ -42,4 +42,3 @@ PHP Store Hours is just one simple file. There's no need to copy/paste the code 
 * [The Nevada Discovery Museum](http://www.nvdm.org/)
 * [Minne's Diner](http://www.minnesdiner.com/)
 * Want to showcase your site? Tweet [@coryetzkorn](http://twitter.com/coryetzkorn)
-
