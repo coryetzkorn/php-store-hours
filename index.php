@@ -31,14 +31,14 @@ body {
   // If closed for the day, leave blank (ex. sunday)
   // If open multiple times in one day, enter time ranges separated by a comma
   $hours = array(
-    'mon' => array('11:00-20:30'),
-    'tue' => array('11:00-16:00', '18:00-20:30'),
-    'wed' => array('11:00-20:30'),
-    'thu' => array('11:00-20:30'),
-    'fri' => array('11:00-20:30'),
-    'sat' => array('11:00-20:00'),
-    'sun' => '',
-  );
+	  'mon' => array('11:00-20:30'),
+	  'tue' => array('11:00-16:00', '18:00-20:30'),
+	  'wed' => array('11:00-20:30'), 
+	  'thu' => array('11:00-1:30'), // Open late
+	  'fri' => array('11:00-20:30'),
+	  'sat' => array('11:00-20:00'),
+	  'sun' => '', // Closed all day
+	);
 
   // OPTIONAL
   // Add exceptions (great for holidays etc.)
