@@ -5,6 +5,11 @@ PHP Store Hours is a simple PHP class that outputs content based on time-of-day 
 
 ###Easily set open hours for each day of the week
 ```php
+// REQUIRED
+// Define daily open hours
+// Must be in 24-hour format, separated by dash 
+// If closed for the day, leave blank (ex. sunday)
+// If open multiple times in one day, enter time ranges separated by a comma
 $hours = array(
   'mon' => array('11:00-20:30'),
   'tue' => array('11:00-16:00', '18:00-20:30'),
@@ -18,6 +23,9 @@ $hours = array(
 
 ###Add exceptions for specific dates / holidays
 ```php
+// OPTIONAL
+// Add exceptions (great for holidays etc.)
+// Works best with format day/month
 $exceptions = array(
   '12/1' => array('11:00-16:00', '18:00-20:30'),
   '6/4' => array('11:00-14:00', '18:00-20:30')
@@ -28,6 +36,9 @@ $exceptions = array(
 Choose what you'd like to output if you're currently open, currently closed, or closed all the day. Shortcodes add dynamic times to your open or closed message.
 
 ```php
+// OPTIONAL
+// Place HTML for output below. This is what will show in the browser.
+// Use {%hours%} shortcode to add dynamic times to your open or closed message.
 $template = array(
   'open' => "<h3>Yes, we're open! Today's hours are {%hours%}.</h3>",
   'closed' => "<h3>Sorry, we're closed. Today's hours are {%hours%}.</h3>",
