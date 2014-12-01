@@ -39,6 +39,24 @@ $template = array(
 );
 ```
 
+###Available Methods
+####$store_hours->render();
+This is the default method that outputs the templated content. You'll most likely want to use this.
+```php
+$store_hours->render();
+```
+
+####$store_hours->hours_today();
+This returns an array of the current day's hours.
+```php
+$store_hours->hours_today();
+```
+####$store_hours->is_open();
+This returns true/false depending on if the store is currently open.
+```php
+$store_hours->hours_today();
+```
+
 There's no need to copy/paste the code above... it's all included in the download. Please report any bugs or issues here on GitHub. I'd love to hear your ideas for improving this script or see how you've used it in your latest project.
 
 
