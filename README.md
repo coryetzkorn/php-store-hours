@@ -1,7 +1,7 @@
 PHP Store Hours
 ===============
 
-PHP Store Hours is a simple script that outputs content based on time-of-day and-day-of-week. Simply include the script in any PHP page, adjust opening and closing hours for each day of the week and the script will output content based on the time ranges you specify.
+PHP Store Hours is a simple PHP class that outputs content based on time-of-day and-day-of-week. Simply include the script in any PHP page, adjust opening and closing hours for each day of the week and the script will output content based on the time ranges you specify.
 
 ###Easily set open hours for each day of the week
 ```php
@@ -11,16 +11,16 @@ $hours = array(
   'wed' => array('11:00-20:30'),
   'thu' => array('11:00-20:30'),
   'fri' => array('11:00-20:30'),
-  'sat' => array('11:00-20:30'),
-  'sun' => array('11:00-20:30')
+  'sat' => array('11:00-20:00'),
+  'sun' => '',
 );
 ```
 
 ###Add exceptions for specific dates / holidays
 ```php
 $exceptions = array(
-  'Christmas' => '10/22',
-  'New Years Day' => '1/1'
+  '12/1' => array('11:00-16:00', '18:00-20:30'),
+  '6/4' => array('11:00-14:00', '18:00-20:30')
 );
 ```
 
@@ -28,10 +28,15 @@ $exceptions = array(
 Choose what you'd like to output if you're currently open, currently closed, closed for the day, or closed for an exception (such as a holiday). Smart shortcodes allow your message to include dynamic infomation such as the current day's hours or the specific reason you're closed. You can even get creative and output a custom image as shown in the example above.
 
 ```php
-$open_now = "<h3>Yes, we're open! Today's hours are %open% until %closed%.</h3>";
-$closed_now = "<h3>Sorry, we're closed. Today's hours are %open% until %closed%.";
-$closed_all_day = "<h3>Sorry, we're closed on %day%.</h3>";
-$exception = "<h3>Sorry, we're closed for %exception%.</h3>";
+$template = array(
+  'open' => "<h3>Yes, we're open! Today's hours are {%hours%}.</h3>",
+  'closed' => "<h3>Sorry, we're closed. Today's hours are {%hours%}.</h3>",
+  'closed_all_day' => "<h3>Sorry, we're closed today.</h3>",
+  'separator' => " - ",
+  'join' => " and ",
+  'format' => "g:ia", // options listed here: http://php.net/manual/en/function.date.php
+  'hours' => "{%open%}{%separator%}{%closed%}"
+);
 ```
 
 There's no need to copy/paste the code above... it's all included in the download. Please report any bugs or issues here on GitHub. I'd love to hear your ideas for improving this script or see how you've used it in your latest project.
