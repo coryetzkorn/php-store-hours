@@ -25,7 +25,7 @@ $exceptions = array(
 ```
 
 ###Customize the final output with shortcodes
-Choose what you'd like to output if you're currently open, currently closed, closed for the day, or closed for an exception (such as a holiday). Smart shortcodes allow your message to include dynamic infomation such as the current day's hours or the specific reason you're closed. You can even get creative and output a custom image as shown in the example above.
+Choose what you'd like to output if you're currently open, currently closed, or closed all the day. Shortcodes add dynamic times to your open or closed message.
 
 ```php
 $template = array(
@@ -60,7 +60,9 @@ $store_hours = new StoreHours($hours, $exceptions, $template);
 $store_hours->hours_today();
 ```
 
-There's no need to copy/paste the code above... it's all included in the download. Please report any bugs or issues here on GitHub. I'd love to hear your ideas for improving this script or see how you've used it in your latest project.
+There's no need to copy/paste the code above... it's all included in the download. 
+
+Please report any bugs or issues here on GitHub. I'd love to hear your ideas for improving this script or see how you've used it in your latest project.
 
 
 ##Sites using PHP Store Hours
