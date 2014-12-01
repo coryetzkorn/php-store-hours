@@ -68,7 +68,7 @@ $store_hours->hours_today();
 This returns true/false depending on if the store is currently open.
 ```php
 $store_hours = new StoreHours($hours, $exceptions, $template);
-$store_hours->hours_today();
+$store_hours->is_open();
 ```
 
 There's no need to copy/paste the code above... it's all included in the download. 
