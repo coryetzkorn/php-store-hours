@@ -13,7 +13,7 @@ PHP Store Hours is a simple PHP class that outputs content based on time-of-day 
 $hours = array(
   'mon' => array('11:00-20:30'),
   'tue' => array('11:00-16:00', '18:00-20:30'),
-  'wed' => array('11:00-20:30'),
+  'wed' => array('11:00-2:30'), // Open late ;)
   'thu' => array('11:00-20:30'),
   'fri' => array('11:00-20:30'),
   'sat' => array('11:00-20:00'),
