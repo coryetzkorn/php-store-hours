@@ -48,7 +48,6 @@ class StoreHours {
           // Today is an exception, use alternate hours instead
           return $ex_hours;
         } else {
-          print_r($hours);
           // Today is not an exception, use regular hours
           return $this->hours[$day];
         }
