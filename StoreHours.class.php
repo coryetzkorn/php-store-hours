@@ -11,7 +11,7 @@
 
 class StoreHours {
 
-  function __construct($hours, $exceptions, $template) {
+  function __construct($hours = array(), $exceptions = array(), $template = array()) {
     $this->hours = $hours;
     $this->exceptions = $exceptions;
     $this->template = $template;
