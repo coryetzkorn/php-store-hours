@@ -32,20 +32,21 @@ body {
   // If open multiple times in one day, enter time ranges separated by a comma
   $hours = array(
 	  'mon' => array('11:00-20:30'),
-	  'tue' => array('11:00-16:00', '18:00-20:30'),
+	  'tue' => array('11:00-13:00', '18:00-20:30'),
 	  'wed' => array('11:00-20:30'), 
 	  'thu' => array('11:00-1:30'), // Open late
 	  'fri' => array('11:00-20:30'),
 	  'sat' => array('11:00-20:00'),
-	  'sun' => '', // Closed all day
+	  'sun' => array('') // Closed all day
 	);
 
   // OPTIONAL
   // Add exceptions (great for holidays etc.)
-  // Works best with format day/month
+  // MUST be in format month/day
+  // Do not include the year if the exception repeats annually
   $exceptions = array(
-    '12/1' => array('11:00-16:00', '18:00-20:30'),
-    '6/4' => array('11:00-14:00', '18:00-20:30')
+    '2/24' => array('11:00-18:00'),
+    '10/18' => array('11:00-16:00', '18:00-20:30')
   );
 
   // OPTIONAL
@@ -64,7 +65,6 @@ body {
   // Instantiate class and call render method to output content
 	$store_hours = new StoreHours($hours, $exceptions, $template);
 	$store_hours->render();
-
 	?>
 	
 	</body>

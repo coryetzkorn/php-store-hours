@@ -42,19 +42,19 @@ class StoreHours {
   public function hours_today() {
     $today = strtotime('today midnight');
     $day = strtolower(date("D"));
-    if($this->exceptions) {
-      foreach($this->exceptions as $ex_day => $ex_hours) {
+    $exceptions = $this->exceptions;
+    $hours_today = $this->hours[$day];
+    if($exceptions) {
+      foreach($exceptions as $ex_day => $ex_hours) {
+        //echo 'ex' . date('r', strtotime($ex_day + '/2014'));
+        //echo 'today' . date('r', $today);
         if(strtotime($ex_day) == $today) {
           // Today is an exception, use alternate hours instead
-          return $ex_hours;
-        } else {
-          // Today is not an exception, use regular hours
-          return $this->hours[$day];
+          $hours_today = $ex_hours;
         }
       }
-    } else {
-      return $this->hours[$day];
     }
+    return $hours_today;
   }
 
   // Returns boolean
@@ -63,16 +63,18 @@ class StoreHours {
     $hours_today = $this->hours_today();
     $exceptions = $this->exceptions;
     $is_open = 0;
-    foreach($hours_today as $range) {
-      $range = explode("-", $range);
-      $start = strtotime($range[0]);
-      $end = strtotime($range[1]);
-      // Add one day if the end time is past midnight
-      if($end <= $start) {
-        $end = strtotime($range[1] . ' + 1 day');
-      }
-      if (($start <= $now) && ($end >= $now)) {
-        $is_open ++;
+    if(!empty($hours_today[0])) {
+      foreach($hours_today as $range) {
+        $range = explode("-", $range);
+        $start = strtotime($range[0]);
+        $end = strtotime($range[1]);
+        // Add one day if the end time is past midnight
+        if($end <= $start) {
+          $end = strtotime($range[1] . ' + 1 day');
+        }
+        if (($start <= $now) && ($end >= $now)) {
+          $is_open ++;
+        }
       }
     }
     if($is_open > 0) {
@@ -88,7 +90,8 @@ class StoreHours {
     $hours_today = $this->hours_today();
     $output = '';
     $index = 0;
-    if($hours_today) {
+    if(!empty($hours_today[0])) {
+      $hours_template = '';
       foreach($hours_today as $range) {
         $range = explode("-", $range);
         $start = strtotime($range[0]);

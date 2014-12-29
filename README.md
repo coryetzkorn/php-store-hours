@@ -12,12 +12,12 @@ PHP Store Hours is a simple PHP class that outputs content based on time-of-day 
 // If open multiple times in one day, enter time ranges separated by a comma
 $hours = array(
   'mon' => array('11:00-20:30'),
-  'tue' => array('11:00-16:00', '18:00-20:30'),
+  'tue' => array('11:00-13:00', '18:00-20:30'),
   'wed' => array('11:00-20:30'), 
   'thu' => array('11:00-1:30'), // Open late
   'fri' => array('11:00-20:30'),
   'sat' => array('11:00-20:00'),
-  'sun' => '', // Closed all day
+  'sun' => array('') // Closed all day
 );
 ```
 
@@ -25,10 +25,11 @@ $hours = array(
 ```php
 // OPTIONAL
 // Add exceptions (great for holidays etc.)
-// Works best with format day/month
+// MUST be in format month/day
+// Do not include the year if the exception repeats annually
 $exceptions = array(
-  '12/1' => array('11:00-16:00', '18:00-20:30'),
-  '6/4' => array('11:00-14:00', '18:00-20:30')
+  '2/24' => array('11:00-18:00'),
+  '10/18' => array('11:00-16:00', '18:00-20:30')
 );
 ```
 
@@ -71,7 +72,11 @@ $store_hours = new StoreHours($hours, $exceptions, $template);
 $store_hours->is_open();
 ```
 
-There's no need to copy/paste the code above... it's all included in the download. 
+###Troubleshooting
+If you're getting errors or if times are not rendering as expected, please double check these items before filing an issue on GitHub:
++ Make sure your timezone is configured
++ Ensure all exceptions use the month/day format
++ Verify that StoreHours.class.php is properly included on the page
 
 Please report any bugs or issues here on GitHub. I'd love to hear your ideas for improving this script or see how you've used it in your latest project.
 
