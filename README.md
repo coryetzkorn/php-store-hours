@@ -34,7 +34,7 @@ $exceptions = array(
 ```
 
 ###Customize the final output with shortcodes
-Choose what you'd like to output if you're currently open, currently closed, or closed all the day. Shortcodes add dynamic times to your open or closed message.
+Choose what you'd like to output if you're currently open, currently closed, or closed all day. Shortcodes add dynamic times to your open or closed message.
 
 ```php
 // OPTIONAL
