@@ -58,7 +58,6 @@ This is the default method that outputs the templated content. You'll most likel
 $store_hours = new StoreHours($hours, $exceptions, $template);
 $store_hours->render();
 ```
-
 ####hours_today();
 This returns an array of the current day's hours.
 ```php
@@ -70,6 +69,21 @@ This returns true/false depending on if the store is currently open.
 ```php
 $store_hours = new StoreHours($hours, $exceptions, $template);
 $store_hours->is_open();
+```
+
+###Use Cases
+####Multiple stores / sets of hours
+If you'd like to show multiple sets of hours on the same page, simply invoke two separate instances of `StoreHours()`. Remember to set the timezone before each new instance.
+```php
+// New York Hours
+date_default_timezone_set('America/New_York'); 
+$nyc_store_hours = new StoreHours($nyc_hours, $nyc_exceptions, $nyc_template);
+$nyc_store_hours->render();
+
+// Los Angeles Hours
+date_default_timezone_set('America/Los_Angeles'); 
+$la_store_hours = new StoreHours($la_hours, $la_exceptions, $la_template);
+$la_store_hours->render();
 ```
 
 ###Troubleshooting
