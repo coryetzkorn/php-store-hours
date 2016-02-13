@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<phpunit colors="true" convertNoticesToExceptions="true" convertWarningsToExceptions="true" stopOnError="false" stopOnFailure="false" stopOnIncomplete="false" stopOnSkipped="false">
+    <testsuites>
+        <testsuite name="all">
+            <file>StoreHoursTest.php</file>
+        </testsuite>
+    </testsuites>
+    <filter>
+        <whitelist>
+            <file>StoreHours.class.php</file>
+        </whitelist>
+    </filter>
+    <logging>
+        <log type="coverage-html" target="build/coverage" charset="UTF-8" yui="true" highlight="true"/>
+    </logging>
+</phpunit>
