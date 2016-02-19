@@ -4,7 +4,7 @@
  * ----------------------------------
  * PHP STORE HOURS
  * ----------------------------------
- * Version 3.0
+ * Version 3.1
  * Written by Cory Etzkorn
  * https://github.com/coryetzkorn/php-store-hours
  *
@@ -44,10 +44,25 @@ class StoreHours
      */
     public function __construct($hours = array(), $exceptions = array(), $templates = array())
     {
-        $this->hours         = $hours;
         $this->exceptions    = $exceptions;
         $this->templates     = $templates;
         $this->yesterdayFlag = false;
+
+        $weekdayToIndex = array(
+            'mon' => 1,
+            'tue' => 2,
+            'wed' => 3,
+            'thu' => 4,
+            'fri' => 5,
+            'sat' => 6,
+            'sun' => 7
+        );
+
+        $this->hours = array();
+
+        foreach ($hours as $key => $value) {
+            $this->hours[$weekdayToIndex[$key]] = $value;
+        }
 
         // Remove empty elements from values (backwards compatibility)
         foreach ($this->hours as $key => $value) {
@@ -70,7 +85,12 @@ class StoreHours
             'separator'      => ' - ',
             'join'           => ' and ',
             'format'         => 'g:ia',
-            'hours'          => '{%open%}{%separator%}{%closed%}'
+            'hours'          => '{%open%}{%separator%}{%closed%}',
+
+            'overview_separator' => '-',
+            'overview_join'      => ', ',
+            'overview_format'    => 'g:ia',
+            'overview_weekdays'  => array('Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun')
         );
 
         $this->templates += $defaultTemplates;
@@ -85,7 +105,7 @@ class StoreHours
     {
         $timestamp     = (null !== $timestamp) ? $timestamp : time();
         $today         = strtotime(date('Y-m-d', $timestamp) . ' midnight');
-        $weekday_short = strtolower(date('D', $timestamp));
+        $weekday_short = date('N', $timestamp);
 
         $hours_today = array();
 
@@ -130,7 +150,7 @@ class StoreHours
                 $end = strtotime($yesterday . ' ' . $range[1] . ' +1 day');
             }
 
-            if (($start <= $timestamp) && ($timestamp <= $end)) {
+            if ($start <= $timestamp && $timestamp <= $end) {
                 $is_open = true;
                 $this->yesterdayFlag = true;
                 break;
@@ -152,7 +172,7 @@ class StoreHours
                     $end = strtotime($day . ' ' . $range[1] . ' +1 day');
                 }
 
-                if (($start <= $timestamp) && ($timestamp <= $end)) {
+                if ($start <= $timestamp && $timestamp <= $end) {
                     $is_open = true;
                     break;
                 }
@@ -224,5 +244,94 @@ class StoreHours
         } else {
             $this->render_html('closed', $timestamp);
         }
+    }
+
+    /**
+     *
+     * @return array
+     */
+    public function hours_overview()
+    {
+        $blocks = array();
+
+        $lookup = array_combine(range(1, 7), $this->templates['overview_weekdays']);
+
+        // Remove empty elements ("closed all day")
+
+        $hours = array_filter($this->hours, function ($element) {
+            return (count($element) > 0);
+        });
+
+        foreach ($hours as $weekday => $hours2) {
+            foreach ($blocks as &$block) {
+                if ($block['hours'] == $hours2) {
+                    $block['days'][] = $weekday;
+                    continue 2;
+                }
+            }
+            unset($block);
+
+            $blocks[] = array('days' => array($weekday), 'hours' => $hours2);
+        }
+
+        // Flatten
+
+        $ret = array();
+
+        foreach ($blocks as $block) {
+            // Format days
+
+            $keyparts     = array();
+            $keys         = $block['days'];
+            $buffer       = array();
+            $lastIndex    = null;
+            $minGroupSize = 3;
+
+            foreach ($keys as $index) {
+                if ($lastIndex !== null && $index - 1 !== $lastIndex) {
+                    if (count($buffer) >= $minGroupSize) {
+                        $keyparts[] = $lookup[$buffer[0]] . '-' . $lookup[$buffer[count($buffer) - 1]];
+                    } else {
+                        foreach ($buffer as $b) {
+                            $keyparts[] = $lookup[$b];
+                        }
+                    }
+                    $buffer = array();
+                }
+
+                $buffer[] = $index;
+
+                $lastIndex = $index;
+            }
+            if (count($buffer) >= $minGroupSize) {
+                $keyparts[] = $lookup[$buffer[0]] . '-' . $lookup[$buffer[count($buffer) - 1]];
+            } else {
+                foreach ($buffer as $b) {
+                    $keyparts[] = $lookup[$b];
+                }
+            }
+
+            // Format hours
+
+            $hoursparts = array();
+
+            foreach ($block['hours'] as $range) {
+                $day = '2016-01-01';
+
+                $range = explode('-', $range);
+                $start = strtotime($day . ' ' . $range[0]);
+                $end   = strtotime($day . ' ' . $range[1]);
+
+                $hoursparts[] = date($this->templates['overview_format'], $start)
+                              . $this->templates['overview_separator']
+                              . date($this->templates['overview_format'], $end);
+            }
+
+            // Combine
+
+            $ret[implode(', ', $keyparts)] = implode($this->templates['overview_join'], $hoursparts);
+        }
+
+        return $ret;
     }
 }
