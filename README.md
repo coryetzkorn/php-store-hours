@@ -56,7 +56,7 @@ $template = array(
 
 ### Available Methods
 
-#### render([timestamp])
+#### render([timestamp = time()])
 
 This is the default method that outputs the templated content. You'll most likely want to use this.
 
@@ -65,7 +65,7 @@ $store_hours = new StoreHours($hours, $exceptions, $template);
 $store_hours->render();
 ~~~
 
-#### hours_overview()
+#### hours_overview([groupSameDays = false])
 
 This returns an array with a full list of open hours (for a week without exceptions). Days with same hours will be grouped.
 
@@ -82,7 +82,7 @@ foreach ($store_hours->hours_overview() as $days => $hours) {
 echo '</table>';
 ~~~
 
-#### hours_today([timestamp])
+#### hours_today([timestamp = time()])
 
 This returns an array of the current day's hours.
 
@@ -91,7 +91,7 @@ $store_hours = new StoreHours($hours, $exceptions, $template);
 $store_hours->hours_today();
 ~~~
 
-#### is_open([timestamp])
+#### is_open([timestamp = time()])
 
 This returns true/false depending on if the store is currently open.
 

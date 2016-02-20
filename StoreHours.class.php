@@ -248,13 +248,57 @@ class StoreHours
 
     /**
      *
+     * @param array $ranges
+     * @return string
+     */
+    private function hours_overview_format_hours(array $ranges)
+    {
+        $hoursparts = array();
+
+        foreach ($ranges as $range) {
+            $day = '2016-01-01';
+
+            $range = explode('-', $range);
+            $start = strtotime($day . ' ' . $range[0]);
+            $end   = strtotime($day . ' ' . $range[1]);
+
+            $hoursparts[] = date($this->templates['overview_format'], $start)
+                          . $this->templates['overview_separator']
+                          . date($this->templates['overview_format'], $end);
+        }
+
+        return implode($this->templates['overview_join'], $hoursparts);
+    }
+
+    /**
+     *
+     */
+    private function hours_overview_simple()
+    {
+        $lookup = array_combine(range(1, 7), $this->templates['overview_weekdays']);
+
+        $ret = array();
+
+        for ($i = 1; $i <= 7; $i++) {
+            $hours_str = (isset($this->hours[$i]) && count($this->hours[$i]) > 0)
+                    ? $this->hours_overview_format_hours($this->hours[$i])
+                    : '-';
+
+            $ret[$lookup[$i]] = $hours_str;
+        }
+
+        return $ret;
+    }
+
+    /**
+     *
      * @return array
      */
-    public function hours_overview()
+    private function hours_overview_grouped()
     {
-        $blocks = array();
-
         $lookup = array_combine(range(1, 7), $this->templates['overview_weekdays']);
+
+        $blocks = array();
 
         // Remove empty elements ("closed all day")
 
@@ -264,7 +308,7 @@ class StoreHours
 
         foreach ($hours as $weekday => $hours2) {
             foreach ($blocks as &$block) {
-                if ($block['hours'] == $hours2) {
+                if ($block['hours'] === $hours2) {
                     $block['days'][] = $weekday;
                     continue 2;
                 }
@@ -311,27 +355,22 @@ class StoreHours
                 }
             }
 
-            // Format hours
-
-            $hoursparts = array();
-
-            foreach ($block['hours'] as $range) {
-                $day = '2016-01-01';
-
-                $range = explode('-', $range);
-                $start = strtotime($day . ' ' . $range[0]);
-                $end   = strtotime($day . ' ' . $range[1]);
-
-                $hoursparts[] = date($this->templates['overview_format'], $start)
-                              . $this->templates['overview_separator']
-                              . date($this->templates['overview_format'], $end);
-            }
-
             // Combine
 
-            $ret[implode(', ', $keyparts)] = implode($this->templates['overview_join'], $hoursparts);
+            $ret[implode(', ', $keyparts)] = $this->hours_overview_format_hours($block['hours']);
         }
 
         return $ret;
+    }
+
+    /**
+     *
+     * @return array
+     */
+    public function hours_overview($groupSameDays = false)
+    {
+        return (true === $groupSameDays)
+                ? $this->hours_overview_grouped()
+                : $this->hours_overview_simple();
     }
 }

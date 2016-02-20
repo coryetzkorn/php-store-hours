@@ -88,6 +88,16 @@
     }
     echo '</table>';
 
+    // Same list, but group days with identical hours
+    echo '<table>';
+    foreach ($store_hours->hours_overview(true) as $days => $hours) {
+        echo '<tr>';
+        echo '<td>' . $days . '</td>';
+        echo '<td>' . $hours . '</td>';
+        echo '</tr>';
+    }
+    echo '</table>';
+
     ?>
 
     </body>
