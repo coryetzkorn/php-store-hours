@@ -226,7 +226,7 @@ class StoreHoursTest extends PHPUnit_Framework_TestCase
             'Fri' => '-',
             'Sat' => '-',
             'Sun' => '-'
-        ), $sh->hours_overview());
+        ), $sh->hours_this_week());
 
         $sh = new StoreHours(array('fri' => array('')));
         $this->assertEquals(array(
@@ -237,7 +237,7 @@ class StoreHoursTest extends PHPUnit_Framework_TestCase
             'Fri' => '-',
             'Sat' => '-',
             'Sun' => '-'
-        ), $sh->hours_overview());
+        ), $sh->hours_this_week());
 
 
         $sh = new StoreHours(array(
@@ -255,7 +255,7 @@ class StoreHoursTest extends PHPUnit_Framework_TestCase
             'Fri' => '8:00am-12:00pm, 1:00pm-1:30am',
             'Sat' => '-',
             'Sun' => '8:00am-1:30am'
-        ), $sh->hours_overview());
+        ), $sh->hours_this_week());
     }
 
     /**
@@ -264,10 +264,10 @@ class StoreHoursTest extends PHPUnit_Framework_TestCase
     public function testHoursOverviewGrouped()
     {
         $sh = new StoreHours(array());
-        $this->assertEquals(array(), $sh->hours_overview(true));
+        $this->assertEquals(array(), $sh->hours_this_week(true));
 
         $sh = new StoreHours(array('fri' => array('')));
-        $this->assertEquals(array(), $sh->hours_overview(true));
+        $this->assertEquals(array(), $sh->hours_this_week(true));
 
 
         $sh = new StoreHours(array(
@@ -275,7 +275,7 @@ class StoreHoursTest extends PHPUnit_Framework_TestCase
         ));
         $this->assertEquals(array(
             'Sun' => '8:00am-12:00pm'
-        ), $sh->hours_overview(true));
+        ), $sh->hours_this_week(true));
 
 
         $sh = new StoreHours(array(
@@ -284,7 +284,7 @@ class StoreHoursTest extends PHPUnit_Framework_TestCase
         ));
         $this->assertEquals(array(
             'Mon, Tue' => '8:00am-12:00pm, 1:00pm-1:30am'
-        ), $sh->hours_overview(true));
+        ), $sh->hours_this_week(true));
 
 
         $sh = new StoreHours(array(
@@ -294,7 +294,7 @@ class StoreHoursTest extends PHPUnit_Framework_TestCase
         ));
         $this->assertEquals(array(
             'Mon-Wed' => '8:00am-12:00pm, 1:00pm-1:30am'
-        ), $sh->hours_overview(true));
+        ), $sh->hours_this_week(true));
 
 
         $sh = new StoreHours(array(
@@ -307,7 +307,7 @@ class StoreHoursTest extends PHPUnit_Framework_TestCase
         $this->assertEquals(array(
             'Mon, Tue, Thu, Fri' => '8:00am-12:00pm, 1:00pm-1:30am',
             'Sun'                => '8:00am-1:30am'
-        ), $sh->hours_overview(true));
+        ), $sh->hours_this_week(true));
 
 
         $sh = new StoreHours(array(
@@ -320,6 +320,6 @@ class StoreHoursTest extends PHPUnit_Framework_TestCase
         ));
         $this->assertEquals(array(
             'Mon-Wed, Fri-Sun' => '8:00am-12:00pm, 1:00pm-1:30am'
-        ), $sh->hours_overview(true));
+        ), $sh->hours_this_week(true));
     }
 }

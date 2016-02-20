@@ -13,7 +13,7 @@
         table {
             font-size: small;
             text-align: left;
-            margin: 150px auto 0 auto;
+            margin: 100px auto 0 auto;
             border-collapse: collapse;
         }
         td {
@@ -64,23 +64,26 @@
     // Place HTML for output below. This is what will show in the browser.
     // Use {%hours%} shortcode to add dynamic times to your open or closed message.
     $template = array(
-        'open'           => "<h3>Yes, we're open! Today's hours are {%hours%}.</h3>",
-        'closed'         => "<h3>Sorry, we're closed. Today's hours are {%hours%}.</h3>",
-        'closed_all_day' => "<h3>Sorry, we're closed today.</h3>",
+        'open'           => "Yes, we're open! Today's hours are {%hours%}.",
+        'closed'         => "Sorry, we're closed. Today's hours are {%hours%}.",
+        'closed_all_day' => "Sorry, we're closed today.",
         'separator'      => " - ",
         'join'           => " and ",
         'format'         => "g:ia", // options listed here: http://php.net/manual/en/function.date.php
         'hours'          => "{%open%}{%separator%}{%closed%}"
     );
 
-    // Instantiate class and call render method to output content
+    // Instantiate class
     $store_hours = new StoreHours($hours, $exceptions, $template);
+    
+    // Call render method to output open / closed message
+    echo '<h3>';
     $store_hours->render();
-
+    echo '</h3>';
 
     // Display full list of open hours (for a week without exceptions)
     echo '<table>';
-    foreach ($store_hours->hours_overview() as $days => $hours) {
+    foreach ($store_hours->hours_this_week() as $days => $hours) {
         echo '<tr>';
         echo '<td>' . $days . '</td>';
         echo '<td>' . $hours . '</td>';
@@ -90,7 +93,7 @@
 
     // Same list, but group days with identical hours
     echo '<table>';
-    foreach ($store_hours->hours_overview(true) as $days => $hours) {
+    foreach ($store_hours->hours_this_week(true) as $days => $hours) {
         echo '<tr>';
         echo '<td>' . $days . '</td>';
         echo '<td>' . $hours . '</td>';

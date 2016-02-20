@@ -273,7 +273,7 @@ class StoreHours
     /**
      *
      */
-    private function hours_overview_simple()
+    private function hours_this_week_simple()
     {
         $lookup = array_combine(range(1, 7), $this->templates['overview_weekdays']);
 
@@ -294,7 +294,7 @@ class StoreHours
      *
      * @return array
      */
-    private function hours_overview_grouped()
+    private function hours_this_week_grouped()
     {
         $lookup = array_combine(range(1, 7), $this->templates['overview_weekdays']);
 
@@ -367,10 +367,10 @@ class StoreHours
      *
      * @return array
      */
-    public function hours_overview($groupSameDays = false)
+    public function hours_this_week($groupSameDays = false)
     {
         return (true === $groupSameDays)
-                ? $this->hours_overview_grouped()
-                : $this->hours_overview_simple();
+                ? $this->hours_this_week_grouped()
+                : $this->hours_this_week_simple();
     }
 }
