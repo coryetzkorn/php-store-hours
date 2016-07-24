@@ -44,11 +44,11 @@
     $hours = array(
         'mon' => array('11:00-20:30'),
         'tue' => array('11:00-13:00', '18:00-20:30'),
-        'wed' => array('11:00-20:30'),
+        'wed' => array('11:00-13:00', '18:00-20:30'),
         'thu' => array('11:00-1:30'), // Open late
         'fri' => array('11:00-20:30'),
         'sat' => array('11:00-20:00'),
-        'sun' => array() // Closed all day
+        'sun' => array('11:00-20:00')
     );
 
     // OPTIONAL
@@ -60,26 +60,22 @@
         '10/18' => array('11:00-16:00', '18:00-20:30')
     );
 
-    // OPTIONAL
-    // Place HTML for output below. This is what will show in the browser.
-    // Use {%hours%} shortcode to add dynamic times to your open or closed message.
-    $template = array(
-        'open'           => "Yes, we're open! Today's hours are {%hours%}.",
-        'closed'         => "Sorry, we're closed. Today's hours are {%hours%}.",
-        'closed_all_day' => "Sorry, we're closed today.",
-        'separator'      => " - ",
-        'join'           => " and ",
-        'format'         => "g:ia", // options listed here: http://php.net/manual/en/function.date.php
-        'hours'          => "{%open%}{%separator%}{%closed%}"
+    $config = array(
+        'separator'      => ' - ',
+        'join'           => ' and ',
+        'format'         => 'g:ia',
+        'overview_weekdays'  => array('Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun')
     );
 
     // Instantiate class
-    $store_hours = new StoreHours($hours, $exceptions, $template);
+    $store_hours = new StoreHours($hours, $exceptions, $config);
     
-    // Call render method to output open / closed message
-    echo '<h3>';
-    $store_hours->render();
-    echo '</h3>';
+    // Display open / closed message
+    if($store_hours->is_open()) {
+        echo "Yes, we're open! Today's hours are " . $store_hours->hours_today() . ".";
+    } else {
+        echo "Sorry, we're closed. Today's hours are " . $store_hours->hours_today() . ".";
+    }
 
     // Display full list of open hours (for a week without exceptions)
     echo '<table>';
