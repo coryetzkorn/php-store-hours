@@ -1,3 +1,6 @@
+> ⚠️ Note: I am no longer actively maintaining this repo.  
+Please reach out if you're interested in becoming the primary maintainer.
+
 PHP Store Hours
 ===============
 
