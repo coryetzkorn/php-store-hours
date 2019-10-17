@@ -273,20 +273,30 @@ class StoreHours
     /**
      *
      */
-    private function hours_this_week_simple()
+    private function hours_this_week_simple($startToday=false)
     {
         $lookup = array_combine(range(1, 7), $this->templates['overview_weekdays']);
 
         $ret = array();
 
-        for ($i = 1; $i <= 7; $i++) {
-            $hours_str = (isset($this->hours[$i]) && count($this->hours[$i]) > 0)
-                    ? $this->hours_overview_format_hours($this->hours[$i])
-                    : '-';
-
-            $ret[$lookup[$i]] = $hours_str;
+        if($startToday){
+            $todayIndex	= date('N');
+        }
+        else{
+            $todayIndex	= 1;
         }
 
+        for ($i = 0; $i <= 6; $i++) {
+            $dayIndex = $todayIndex+$i;
+            if($dayIndex > 7){
+                $dayIndex -=7;
+            }
+
+            $hours_str = (isset($this->hours[$dayIndex]) && count($this->hours[$dayIndex]) > 0)
+            ? $this->hours_overview_format_hours($this->hours[$dayIndex])
+            : '-';
+            $ret[$lookup[$dayIndex]] = $hours_str;
+        }
         return $ret;
     }
 
@@ -367,10 +377,10 @@ class StoreHours
      *
      * @return array
      */
-    public function hours_this_week($groupSameDays = false)
+    public function hours_this_week($groupSameDays = false, $startToday = false)
     {
         return (true === $groupSameDays)
-                ? $this->hours_this_week_grouped()
-                : $this->hours_this_week_simple();
+        ? $this->hours_this_week_grouped()
+        : $this->hours_this_week_simple($startToday);
     }
 }
